@@ -10,6 +10,7 @@ import (
 
 var solutionFuncs = []func([]string) string{
 	solutions.Day1Problem1,
+	solutions.Day1Problem2,
 }
 
 func main() {
