@@ -42,5 +42,5 @@ func main() {
 	}
 
 	result := solutionFuncs[day*problem-1](problemInput)
-	fmt.Printf("Result: %s", result)
+	fmt.Printf("Result: %s\n", result)
 }
