@@ -37,7 +37,7 @@ func main() {
 		return
 	}
 
-	problemInput, err := utils.ReadProblemInput(day, problem)
+	problemInput, err := utils.ReadProblemInput(day)
 	if err != nil {
 		panic(err)
 	}

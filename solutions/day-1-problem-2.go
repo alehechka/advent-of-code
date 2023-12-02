@@ -1,7 +1,6 @@
 package solutions
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -52,7 +51,6 @@ func Day1Problem2(inputs []string) string {
 				break
 			}
 		}
-		fmt.Printf("%s: %s+%s\n", input, firstNum, lastNum)
 		num, err := strconv.Atoi(firstNum + lastNum)
 		if err != nil {
 			panic(err)
