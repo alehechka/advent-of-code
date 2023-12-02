@@ -8,9 +8,9 @@ import (
 	"strconv"
 )
 
-var solutionFuncs = []func([]string) string{
-	solutions.Day1Problem1,
-	solutions.Day1Problem2,
+var solutionFuncs = [][]func([]string) string{
+	{solutions.Day1Problem1, solutions.Day1Problem2},
+	{solutions.Day2Problem1},
 }
 
 func main() {
@@ -42,6 +42,6 @@ func main() {
 		panic(err)
 	}
 
-	result := solutionFuncs[day*problem-1](problemInput)
+	result := solutionFuncs[day-1][problem-1](problemInput)
 	fmt.Printf("Result: %s\n", result)
 }
