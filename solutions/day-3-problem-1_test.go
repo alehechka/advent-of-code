@@ -65,13 +65,13 @@ var day3Data = []day3Datum{
 }
 
 func Test_Day3Number_ParseNumbersFromRow(t *testing.T) {
-	for _, data := range day3Data {
-		test_Day3Number_ParseNumbersFromRow(t, data)
+	for index, data := range day3Data {
+		test_Day3Number_ParseNumbersFromRow(t, index, data)
 	}
 }
 
-func test_Day3Number_ParseNumbersFromRow(t *testing.T, data day3Datum) {
-	nums := solutions.Day3Row(data.line).ParseNumbersFromRow()
+func test_Day3Number_ParseNumbersFromRow(t *testing.T, rowIndex int, data day3Datum) {
+	nums := solutions.Day3Row(data.line).ParseNumbersFromRow(rowIndex)
 
 	assert.Equal(t, len(data.numbers), len(nums))
 	fmt.Println(nums)

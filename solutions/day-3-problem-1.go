@@ -17,7 +17,7 @@ func Day3Problem1(inputs []string) string {
 		if len(inputs) > index+1 {
 			below = inputs[index+1]
 		}
-		_, rowTotal := Day3Row(input).ParseNumbersWithAdjacent(above, below)
+		_, rowTotal := Day3Row(input).ParseNumbersWithAdjacent(index, above, below)
 		total += rowTotal
 	}
 
@@ -26,16 +26,16 @@ func Day3Problem1(inputs []string) string {
 
 type Day3Row string
 
-func (r Day3Row) ParseNumbersWithAdjacent(rowAbove string, rowBelow string) (nums []int, total int) {
+func (r Day3Row) ParseNumbersWithAdjacent(rowIndex int, rowAbove string, rowBelow string) (nums []Day3Number, total int) {
 	if r == "" {
 		return
 	}
 
-	numbers := r.ParseNumbersFromRow()
+	numbers := r.ParseNumbersFromRow(rowIndex)
 	for _, number := range numbers {
 		number.SetAdjacent(string(r), rowAbove, rowBelow)
 		if number.HasAdjacentSpecial() {
-			nums = append(nums, number.Number())
+			nums = append(nums, number)
 			total += number.Number()
 		}
 	}
@@ -46,6 +46,7 @@ func (r Day3Row) ParseNumbersWithAdjacent(rowAbove string, rowBelow string) (num
 type Day3Number struct {
 	Raw        string
 	Index      int
+	Row        int
 	CharsAbove string
 	CharLeft   string
 	CharRight  string
@@ -93,10 +94,10 @@ func (n *Day3Number) SetAdjacent(current string, above string, below string) {
 	}
 }
 
-func (r Day3Row) ParseNumbersFromRow() []Day3Number {
+func (r Day3Row) ParseNumbersFromRow(rowIndex int) []Day3Number {
 	nums := make([]Day3Number, 0)
 
-	var current Day3Number
+	current := Day3Number{Row: rowIndex}
 	for index := range r {
 		ch := r[index]
 		if isInt(ch) {
@@ -106,7 +107,7 @@ func (r Day3Row) ParseNumbersFromRow() []Day3Number {
 			current.Raw += string(ch)
 		} else if current.Raw != "" {
 			nums = append(nums, current)
-			current = Day3Number{}
+			current = Day3Number{Row: rowIndex}
 		}
 		if index == len(r)-1 && current.Raw != "" {
 			nums = append(nums, current)
