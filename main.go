@@ -29,6 +29,11 @@ func main() {
 		fmt.Printf("Day %d is invalid, please provide between 1 and 25\n", day)
 		return
 	}
+	if day > len(solutionFuncs) {
+		fmt.Printf("Day %d is not ready yet, please choose another\n", day)
+		return
+	}
+
 	problem, err := strconv.Atoi(os.Args[2])
 	if err != nil {
 		panic(err)
@@ -36,6 +41,11 @@ func main() {
 
 	if problem < 1 || problem > 2 {
 		fmt.Printf("Problem %d is invalid, please provide 1 or 2\n", problem)
+		return
+	}
+
+	if problem > len(solutionFuncs[day-1]) {
+		fmt.Printf("Problem %d is not ready yet, please choose another\n", problem)
 		return
 	}
 
