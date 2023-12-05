@@ -3,6 +3,8 @@ package solutions
 import (
 	"fmt"
 	"strconv"
+	"sync"
+	"time"
 )
 
 func Day5Problem2(inputs []string) string {
@@ -11,18 +13,38 @@ func Day5Problem2(inputs []string) string {
 	categoryMap := Day5ParseCategoryMap(inputs[1:])
 
 	var lowest int
+	var wg sync.WaitGroup
 	for index, seed := range seeds {
 		if index%2 != 0 {
 			continue
 		}
-		fmt.Printf("Traversing from %d to %d, %d items\n", seed, seed+seeds[index+1], seeds[index+1])
-		for i := 0; i <= seeds[index+1]; i++ {
-			dest := categoryMap.Traverse("seed", "location", seed+i)
+		wg.Add(1)
+		go func(index, seed int) {
+			dest := categoryMap.TraverseRange("seed", "location", seed, seeds[index+1])
 			if lowest == 0 || dest < lowest {
 				lowest = dest
 			}
+			wg.Done()
+		}(index, seed)
+	}
+
+	wg.Wait()
+
+	return strconv.Itoa(lowest)
+}
+
+func (c Day5CategoryMap) TraverseRange(startCategory string, endCategory string, startIndex int, seedRange int) int {
+	fmt.Printf("Traversing from %d to %d, %d items\n", startIndex, startIndex+seedRange, seedRange)
+	startTime := time.Now()
+
+	var lowest int
+	for i := 0; i <= seedRange; i++ {
+		dest := c.Traverse("seed", "location", startIndex+i)
+		if lowest == 0 || dest < lowest {
+			lowest = dest
 		}
 	}
 
-	return strconv.Itoa(lowest)
+	fmt.Printf("Traversed from %d to %d, %d items in %v, found lowest: %d\n", startIndex, startIndex+seedRange, seedRange, time.Since(startTime), lowest)
+	return lowest
 }
