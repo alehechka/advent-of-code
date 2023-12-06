@@ -14,6 +14,7 @@ var solutionFuncs = [][]func([]string) string{
 	{solutions.Day3Problem1, solutions.Day3Problem2},
 	{solutions.Day4Problem1, solutions.Day4Problem2},
 	{solutions.Day5Problem1, solutions.Day5Problem2},
+	{solutions.Day6Problem1},
 }
 
 func main() {
