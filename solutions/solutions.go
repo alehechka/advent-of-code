@@ -1,11 +1,13 @@
 package solutions
 
 import (
+	fifteen "advent/solutions/2015"
 	twentythree "advent/solutions/2023"
 )
 
 var Solutions = map[int]SolutionArray{
 	2023: Solutions2023,
+	2015: Solutions2015,
 }
 
 type Solution func([]string) string
@@ -19,4 +21,8 @@ var Solutions2023 = SolutionArray{
 	{twentythree.Day4Problem1, twentythree.Day4Problem2},
 	{twentythree.Day5Problem1, twentythree.Day5Problem2},
 	{twentythree.Day6Problem1, twentythree.Day6Problem2},
+}
+
+var Solutions2015 = SolutionArray{
+	{fifteen.Day1Problem1},
 }
