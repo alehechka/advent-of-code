@@ -8,9 +8,7 @@ import (
 func Day6Problem2(inputs []string) string {
 	race := Day6Race{RaceTime: GetNumberFromSpaceDelimited(inputs[0]), RecordDistance: GetNumberFromSpaceDelimited(inputs[1])}
 
-	validHoldTimes := race.ValidHoldTimes()
-
-	return strconv.Itoa(len(validHoldTimes))
+	return strconv.Itoa(race.NumValidHoldTimes())
 }
 
 func GetNumberFromSpaceDelimited(input string) int {

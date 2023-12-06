@@ -10,7 +10,7 @@ func Day6Problem1(inputs []string) string {
 
 	product := 1
 	for _, race := range races {
-		product *= len(race.ValidHoldTimes())
+		product *= race.NumValidHoldTimes()
 	}
 
 	return strconv.Itoa(product)
@@ -29,6 +29,16 @@ func (r Day6Race) ValidHoldTimes() (holdTimes []int) {
 		}
 	}
 	return
+}
+
+func (r Day6Race) NumValidHoldTimes() int {
+	for i := 1; i < r.RaceTime; i++ {
+		distanceTraveled := i * (r.RaceTime - i)
+		if distanceTraveled > r.RecordDistance {
+			return r.RaceTime - i - i + 1
+		}
+	}
+	return 0
 }
 
 func Day6ParseInputRows(timesRow string, distancesRow string) (races []Day6Race) {
