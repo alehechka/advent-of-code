@@ -7,8 +7,8 @@ import (
 )
 
 // ReadProblemInput reads a given day's input by line
-func ReadProblemInput(day int) ([]string, error) {
-	dat, err := os.ReadFile(fmt.Sprintf("inputs/day-%d.txt", day))
+func ReadProblemInput(year int, day int) ([]string, error) {
+	dat, err := os.ReadFile(fmt.Sprintf("inputs/%d/day-%d.txt", year, day))
 	if err != nil {
 		return nil, err
 	}

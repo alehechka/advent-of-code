@@ -1,4 +1,4 @@
-package solutions
+package twentythree
 
 import (
 	"advent/utils"

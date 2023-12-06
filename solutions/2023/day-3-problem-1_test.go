@@ -1,7 +1,7 @@
-package solutions_test
+package twentythree_test
 
 import (
-	"advent/solutions"
+	twentythree "advent/solutions/2023"
 	"fmt"
 	"testing"
 
@@ -10,13 +10,13 @@ import (
 
 type day3Datum struct {
 	line    string
-	numbers []solutions.Day3Number
+	numbers []twentythree.Day3Number
 }
 
 var day3Data = []day3Datum{
 	{
 		line: "............................................411.....................363..134.........463.775..........................506...................",
-		numbers: []solutions.Day3Number{
+		numbers: []twentythree.Day3Number{
 			{Raw: "411", Index: 44, CharsAbove: "", CharLeft: ".", CharRight: ".", CharsBelow: "...*."},
 			{Raw: "363", Index: 68, CharsAbove: "", CharLeft: ".", CharRight: ".", CharsBelow: "....*"},
 			{Raw: "134", Index: 73, CharsAbove: "", CharLeft: ".", CharRight: ".", CharsBelow: "...=."},
@@ -27,7 +27,7 @@ var day3Data = []day3Datum{
 	},
 	{
 		line: "......429...836..$............../..960........*.............+..........*...=....381.....*........67......426.....=..../...304...............",
-		numbers: []solutions.Day3Number{
+		numbers: []twentythree.Day3Number{
 			{Raw: "429", Index: 6, CharsAbove: ".....", CharLeft: ".", CharRight: ".", CharsBelow: "...72"},
 			{Raw: "836", Index: 12, CharsAbove: ".....", CharLeft: ".", CharRight: ".", CharsBelow: "....."},
 			{Raw: "960", Index: 35, CharsAbove: ".....", CharLeft: ".", CharRight: ".", CharsBelow: "....."},
@@ -39,7 +39,7 @@ var day3Data = []day3Datum{
 	},
 	{
 		line: "........721........*...17................790...670.............$..........893.93&../...129$.651.696.......131*99.............=......446*781.",
-		numbers: []solutions.Day3Number{
+		numbers: []twentythree.Day3Number{
 			{Raw: "721", Index: 8, CharsAbove: "29...", CharLeft: ".", CharRight: ".", CharsBelow: "....."},
 			{Raw: "17", Index: 23, CharsAbove: "....", CharLeft: ".", CharRight: ".", CharsBelow: "...."},
 			{Raw: "790", Index: 41, CharsAbove: ".....", CharLeft: ".", CharRight: ".", CharsBelow: "....."},
@@ -57,7 +57,7 @@ var day3Data = []day3Datum{
 	},
 	{
 		line: "1$........................................................................................................................................*9",
-		numbers: []solutions.Day3Number{
+		numbers: []twentythree.Day3Number{
 			{Raw: "1", Index: 0, CharsAbove: "..", CharLeft: "", CharRight: "$", CharsBelow: ""},
 			{Raw: "9", Index: 139, CharsAbove: "1.", CharLeft: "*", CharRight: "", CharsBelow: ""},
 		},
@@ -71,7 +71,7 @@ func Test_Day3Number_ParseNumbersFromRow(t *testing.T) {
 }
 
 func test_Day3Number_ParseNumbersFromRow(t *testing.T, rowIndex int, data day3Datum) {
-	nums := solutions.Day3Row(data.line).ParseNumbersFromRow(rowIndex)
+	nums := twentythree.Day3Row(data.line).ParseNumbersFromRow(rowIndex)
 
 	assert.Equal(t, len(data.numbers), len(nums))
 	fmt.Println(nums)
@@ -100,7 +100,7 @@ func Test_Day3Number_SetAdjacent(t *testing.T) {
 
 func test_Day3Number_SetAdjacent(t *testing.T, data day3Datum, above string, below string) {
 	for _, expected := range data.numbers {
-		actual := solutions.Day3Number{Raw: expected.Raw, Index: expected.Index}
+		actual := twentythree.Day3Number{Raw: expected.Raw, Index: expected.Index}
 		actual.SetAdjacent(data.line, above, below)
 
 		assert.Equal(t, expected.CharsAbove, actual.CharsAbove, fmt.Sprintf("CharsAbove not equal: [%d]%s", expected.Index, expected.Raw))
@@ -111,19 +111,19 @@ func test_Day3Number_SetAdjacent(t *testing.T, data day3Datum, above string, bel
 }
 
 func Test_Day3Number_HasAdjacentSpecial(t *testing.T) {
-	assert.True(t, solutions.Day3Number{CharsAbove: "..*."}.HasAdjacentSpecial())
-	assert.True(t, solutions.Day3Number{CharLeft: "*"}.HasAdjacentSpecial())
-	assert.True(t, solutions.Day3Number{CharRight: "*"}.HasAdjacentSpecial())
-	assert.True(t, solutions.Day3Number{CharsBelow: "..*.."}.HasAdjacentSpecial())
-	assert.True(t, solutions.Day3Number{CharsBelow: "..$.."}.HasAdjacentSpecial())
-	assert.True(t, solutions.Day3Number{CharsBelow: "../.."}.HasAdjacentSpecial())
-	assert.True(t, solutions.Day3Number{CharsBelow: "..=.."}.HasAdjacentSpecial())
-	assert.True(t, solutions.Day3Number{CharsBelow: "..+.."}.HasAdjacentSpecial())
+	assert.True(t, twentythree.Day3Number{CharsAbove: "..*."}.HasAdjacentSpecial())
+	assert.True(t, twentythree.Day3Number{CharLeft: "*"}.HasAdjacentSpecial())
+	assert.True(t, twentythree.Day3Number{CharRight: "*"}.HasAdjacentSpecial())
+	assert.True(t, twentythree.Day3Number{CharsBelow: "..*.."}.HasAdjacentSpecial())
+	assert.True(t, twentythree.Day3Number{CharsBelow: "..$.."}.HasAdjacentSpecial())
+	assert.True(t, twentythree.Day3Number{CharsBelow: "../.."}.HasAdjacentSpecial())
+	assert.True(t, twentythree.Day3Number{CharsBelow: "..=.."}.HasAdjacentSpecial())
+	assert.True(t, twentythree.Day3Number{CharsBelow: "..+.."}.HasAdjacentSpecial())
 
-	assert.False(t, solutions.Day3Number{}.HasAdjacentSpecial())
-	assert.False(t, solutions.Day3Number{CharsAbove: "..34.."}.HasAdjacentSpecial())
-	assert.False(t, solutions.Day3Number{CharLeft: "."}.HasAdjacentSpecial())
-	assert.False(t, solutions.Day3Number{CharRight: "."}.HasAdjacentSpecial())
-	assert.False(t, solutions.Day3Number{CharsBelow: "5...6"}.HasAdjacentSpecial())
-	assert.False(t, solutions.Day3Number{CharsAbove: "..34..", CharLeft: ".", CharRight: ".", CharsBelow: "5...6"}.HasAdjacentSpecial())
+	assert.False(t, twentythree.Day3Number{}.HasAdjacentSpecial())
+	assert.False(t, twentythree.Day3Number{CharsAbove: "..34.."}.HasAdjacentSpecial())
+	assert.False(t, twentythree.Day3Number{CharLeft: "."}.HasAdjacentSpecial())
+	assert.False(t, twentythree.Day3Number{CharRight: "."}.HasAdjacentSpecial())
+	assert.False(t, twentythree.Day3Number{CharsBelow: "5...6"}.HasAdjacentSpecial())
+	assert.False(t, twentythree.Day3Number{CharsAbove: "..34..", CharLeft: ".", CharRight: ".", CharsBelow: "5...6"}.HasAdjacentSpecial())
 }

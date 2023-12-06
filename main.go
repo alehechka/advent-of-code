@@ -8,22 +8,27 @@ import (
 	"strconv"
 )
 
-var solutionFuncs = [][]func([]string) string{
-	{solutions.Day1Problem1, solutions.Day1Problem2},
-	{solutions.Day2Problem1, solutions.Day2Problem2},
-	{solutions.Day3Problem1, solutions.Day3Problem2},
-	{solutions.Day4Problem1, solutions.Day4Problem2},
-	{solutions.Day5Problem1, solutions.Day5Problem2},
-	{solutions.Day6Problem1, solutions.Day6Problem2},
-}
-
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Println("Not enough arguments supplied, please provide day and problem numbers")
+	if len(os.Args) < 4 {
+		fmt.Println("Not enough arguments supplied, please provide year, day, and problem numbers")
 		return
 	}
 
-	day, err := strconv.Atoi(os.Args[1])
+	year, err := strconv.Atoi(os.Args[1])
+	if err != nil {
+		panic(err)
+	}
+	solutionFuncs, ok := solutions.Solutions[year]
+	if !ok {
+		keys := make([]int, 0)
+		for k := range solutions.Solutions {
+			keys = append(keys, k)
+		}
+		fmt.Printf("Year %d is not valid, options are: %v\n", year, keys)
+		return
+	}
+
+	day, err := strconv.Atoi(os.Args[2])
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +41,7 @@ func main() {
 		return
 	}
 
-	problem, err := strconv.Atoi(os.Args[2])
+	problem, err := strconv.Atoi(os.Args[3])
 	if err != nil {
 		panic(err)
 	}
@@ -51,7 +56,7 @@ func main() {
 		return
 	}
 
-	problemInput, err := utils.ReadProblemInput(day)
+	problemInput, err := utils.ReadProblemInput(year, day)
 	if err != nil {
 		panic(err)
 	}
