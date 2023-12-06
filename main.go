@@ -14,9 +14,26 @@ func main() {
 		return
 	}
 
-	year, err := strconv.Atoi(os.Args[1])
+	solution, year, day, _, err := FindSolution()
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return
+	}
+
+	problemInput, err := utils.ReadProblemInput(year, day)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	result := solution(problemInput)
+	fmt.Printf("Result: %s\n", result)
+}
+
+func FindSolution() (solution solutions.Solution, year, day, problem int, err error) {
+	year, err = strconv.Atoi(os.Args[1])
+	if err != nil {
+		return
 	}
 	solutionFuncs, ok := solutions.Solutions[year]
 	if !ok {
@@ -24,43 +41,38 @@ func main() {
 		for k := range solutions.Solutions {
 			keys = append(keys, k)
 		}
-		fmt.Printf("Year %d is not valid, options are: %v\n", year, keys)
+		err = fmt.Errorf("year %d is not valid, options are: %v", year, keys)
 		return
 	}
 
-	day, err := strconv.Atoi(os.Args[2])
+	day, err = strconv.Atoi(os.Args[2])
 	if err != nil {
-		panic(err)
+		return
 	}
 	if day < 1 || day > 25 {
-		fmt.Printf("Day %d is invalid, please provide between 1 and 25\n", day)
+		err = fmt.Errorf("day %d is invalid, please provide between 1 and 25", day)
 		return
 	}
 	if day > len(solutionFuncs) {
-		fmt.Printf("Day %d is not ready yet, please choose another\n", day)
+		err = fmt.Errorf("day %d is not ready yet, please choose another", day)
 		return
 	}
 
-	problem, err := strconv.Atoi(os.Args[3])
+	problem, err = strconv.Atoi(os.Args[3])
 	if err != nil {
-		panic(err)
+		return
 	}
 
 	if problem < 1 || problem > 2 {
-		fmt.Printf("Problem %d is invalid, please provide 1 or 2\n", problem)
+		err = fmt.Errorf("problem %d is invalid, please provide 1 or 2", problem)
 		return
 	}
 
 	if problem > len(solutionFuncs[day-1]) {
-		fmt.Printf("Problem %d is not ready yet, please choose another\n", problem)
+		err = fmt.Errorf("problem %d is not ready yet, please choose another", problem)
 		return
 	}
 
-	problemInput, err := utils.ReadProblemInput(year, day)
-	if err != nil {
-		panic(err)
-	}
-
-	result := solutionFuncs[day-1][problem-1](problemInput)
-	fmt.Printf("Result: %s\n", result)
+	solution = solutionFuncs[day-1][problem-1]
+	return
 }
