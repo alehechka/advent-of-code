@@ -1,38 +1,18 @@
 package twentythree
 
 import (
-	"sort"
 	"strconv"
 	"strings"
 )
 
 func Day7Problem1(inputs []string) string {
-	hands := Day7ParseHands(inputs)
+	useJoker := false
 
-	sort.Slice(hands, func(i, j int) bool {
-		left := hands[i]
-		right := hands[j]
+	hands := Day7ParseHands(inputs, useJoker)
 
-		if left.Type == right.Type {
-			for index := range left.Hand {
-				leftStr := CardStrength(left.Hand[index])
-				rightStr := CardStrength(right.Hand[index])
+	SortHands(hands, useJoker)
 
-				if leftStr != rightStr {
-					return leftStr < rightStr
-				}
-			}
-		}
-
-		return left.Type < right.Type
-	})
-
-	var total int
-	for index, hand := range hands {
-		total += (index + 1) * hand.Bet
-	}
-
-	return strconv.Itoa(total)
+	return strconv.Itoa(Day7Total(hands))
 }
 
 type Day7HandType int
@@ -50,6 +30,7 @@ const (
 type Day7CardStrength int
 
 const (
+	Day7Joker Day7CardStrength = iota
 	Day7Two   Day7CardStrength = iota
 	Day7Three Day7CardStrength = iota
 	Day7Four  Day7CardStrength = iota
@@ -65,7 +46,7 @@ const (
 	Day7Ace   Day7CardStrength = iota
 )
 
-func CardStrength(ch byte) Day7CardStrength {
+func CardStrength(ch byte, useJoker bool) Day7CardStrength {
 	switch ch {
 	case 'A':
 		return Day7Ace
@@ -74,6 +55,9 @@ func CardStrength(ch byte) Day7CardStrength {
 	case 'Q':
 		return Day7Queen
 	case 'J':
+		if useJoker {
+			return Day7Joker
+		}
 		return Day7Jack
 	case 'T':
 		return Day7Ten
@@ -98,19 +82,24 @@ func CardStrength(ch byte) Day7CardStrength {
 	}
 }
 
-func Day7ParseHands(inputs []string) (hands []Day7Hand) {
+func Day7ParseHands(inputs []string, useJoker bool) (hands []Day7Hand) {
 	for _, input := range inputs {
-		hands = append(hands, Day7ParseHand(input))
+		hands = append(hands, Day7ParseHand(input, useJoker))
 	}
 	return
 }
 
-func Day7ParseHand(input string) (hand Day7Hand) {
+func Day7ParseHand(input string, useJoker bool) (hand Day7Hand) {
 	parts := strings.Split(input, " ")
 
 	hand.Hand = parts[0]
 	hand.Bet, _ = strconv.Atoi(parts[1])
-	hand.ParseType()
+
+	if useJoker {
+		hand.ParseTypeWithJoker()
+	} else {
+		hand.ParseType()
+	}
 
 	return
 }
