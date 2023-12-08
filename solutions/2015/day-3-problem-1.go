@@ -10,16 +10,7 @@ func Day3Problem1(inputs []string) string {
 	houses := map[string]int{Day3Key(x, y): 1}
 
 	for _, direction := range inputs[0] {
-		switch direction {
-		case '^':
-			y++
-		case 'v':
-			y--
-		case '>':
-			x++
-		case '<':
-			x--
-		}
+		x, y = Day3Increment(x, y, direction)
 		houses[Day3Key(x, y)]++
 	}
 
