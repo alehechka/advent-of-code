@@ -1,35 +1,43 @@
 package twentythree
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func Day10Problem1(inputs []string) string {
-	x, y := Day10FindStart(inputs)
+	_, steps := Day10TraverseLoop(inputs)
 
-	oneX, oneY := Day10NextIndex(x, y, x, y, inputs)
+	return strconv.Itoa(steps)
+}
+
+func Day10TraverseLoop(pipes []string) (map[string]int, int) {
+	x, y := Day10FindStart(pipes)
+
+	oneX, oneY := Day10NextIndex(x, y, x, y, pipes)
 	prevOneX, prevOneY := x, y
-	twoX, twoY := Day10NextIndex(x, y, oneX, oneY, inputs)
+	twoX, twoY := Day10NextIndex(x, y, oneX, oneY, pipes)
 	prevTwoX, prevTwoY := x, y
 
 	pipeCoords := map[string]int{Day10Key(x, y): 1, Day10Key(oneX, oneY): 1, Day10Key(twoX, twoY): 1}
 
 	for i := 2; i > 0; i++ {
-		newOneX, newOneY := Day10NextIndex(oneX, oneY, prevOneX, prevOneY, inputs)
+		newOneX, newOneY := Day10NextIndex(oneX, oneY, prevOneX, prevOneY, pipes)
 		pipeCoords[Day10Key(newOneX, newOneY)]++
 		prevOneX, prevOneY = oneX, oneY
 		oneX, oneY = newOneX, newOneY
 
-		newTwoX, newTwoY := Day10NextIndex(twoX, twoY, prevTwoX, prevTwoY, inputs)
+		newTwoX, newTwoY := Day10NextIndex(twoX, twoY, prevTwoX, prevTwoY, pipes)
 		pipeCoords[Day10Key(newTwoX, newTwoY)]++
 		prevTwoX, prevTwoY = twoX, twoY
 		twoX, twoY = newTwoX, newTwoY
 
 		if pipeCoords[Day10Key(oneX, oneY)] > 1 || pipeCoords[Day10Key(twoX, twoY)] > 1 {
-			fmt.Println(oneX, oneY, twoX, twoY)
-			return fmt.Sprintf("%d", i)
+			return pipeCoords, i
 		}
 	}
 
-	return ""
+	return pipeCoords, 0
 }
 
 func Day10Key(x, y int) string {
