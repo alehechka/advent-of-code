@@ -1,17 +1,18 @@
 package twentythree
 
 import (
-	"os"
+	"advent/utils"
+	"fmt"
 	"strconv"
 )
 
 func Day10Problem2(inputs []string) string {
 	pipeCoords, _ := Day10TraverseLoop(inputs)
 
-	return strconv.Itoa(Day10CountInclosed(inputs, pipeCoords))
+	return strconv.Itoa(Day10CountInclosed(Day10LoopOnly(inputs, pipeCoords), pipeCoords))
 }
 
-func Day10CountInclosed(rows []string, pipeCoords map[string]int) (count int) {
+func Day10CountInclosed(rows [][]rune, pipeCoords map[string]int) (count int) {
 	loop := make([][]rune, len(rows))
 
 	for y, row := range rows {
@@ -19,52 +20,49 @@ func Day10CountInclosed(rows []string, pipeCoords map[string]int) (count int) {
 			loop[y] = make([]rune, len(rows[y]))
 		}
 		for x, ch := range row {
-			if _, ok := pipeCoords[Day10Key(x, y)]; !ok {
-				if Day10IsInner(rows, x, y, pipeCoords) {
-					count++
-					loop[y][x] = '.'
-				} else {
-					loop[y][x] = ' '
-				}
-			} else {
+			if _, ok := pipeCoords[Day10Key(x, y)]; ok {
 				loop[y][x] = ch
+			} else if Day10IsInner(rows, x, y) {
+				count++
+				loop[y][x] = '.'
+			} else {
+				loop[y][x] = ' '
 			}
 		}
 	}
-	Day10WriteLoopOnly(loop, "day-10-next.out")
+	utils.WriteMatrixToFile(loop, "day-10-next.out")
 	return
 }
 
-func Day10IsInner(rows []string, x, y int, pipeCoords map[string]int) bool {
-	var crossCount int
+func Day10IsInner(rows [][]rune, x, y int) bool {
+	row := rows[y]
+	fmt.Printf("Checking: %s, at %dx%d\n", string(row[x]), x, y)
 
-	for {
-		x--
-		y--
-		if x < 0 || y < 0 {
-			break
+	var left, right, above, below bool
+
+	for i := 1; i < len(rows); i++ {
+		if x-i >= 0 && row[x-i] != '.' && !left {
+			left = true
+			fmt.Printf("Crossed Left: %s, at %dx%d\n", string(row[x-1]), x-i, y)
 		}
-		if _, ok := pipeCoords[Day10Key(x, y)]; ok {
-			crossCount++
+		if x+i+1 < len(row) && row[x+i] != '.' && !right {
+			right = true
+			fmt.Printf("Crossed Right: %s, at %dx%d\n", string(row[x+i]), x+i, y)
+		}
+		if y-i >= 0 && rows[y-i][x] != '.' && !above {
+			above = true
+			fmt.Printf("Crossed Above: %s, at %dx%d\n", string(rows[y-i][x]), x, y-i)
+		}
+		if y+i+1 < len(rows) && rows[y+i][x] != '.' && !below {
+			below = true
+			fmt.Printf("Crossed Below: %s, at %dx%d\n", string(rows[y+i][x]), x, y+i)
+		}
+		if left && right && above && below {
+			return true
 		}
 	}
 
-	return crossCount > 0 && crossCount%2 != 0
-}
-
-func Day10WriteLoopOnly(pipes [][]rune, fileName string) {
-	var data []byte
-	for index, line := range pipes {
-		for _, ch := range line {
-			data = append(data, byte(ch))
-		}
-		if index < len(pipes)-1 {
-			data = append(data, '\n')
-		}
-	}
-	if err := os.WriteFile(fileName, data, 0644); err != nil {
-		panic(err)
-	}
+	return left && right && above && below
 }
 
 func Day10LoopOnly(pipes []string, pipeCoords map[string]int) (loop [][]rune) {
