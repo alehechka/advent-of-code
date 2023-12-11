@@ -54,11 +54,13 @@ func Day10IsInner(rows []string, x, y int, pipeCoords map[string]int) bool {
 
 func Day10WriteLoopOnly(pipes [][]rune, fileName string) {
 	var data []byte
-	for _, line := range pipes {
+	for index, line := range pipes {
 		for _, ch := range line {
 			data = append(data, byte(ch))
 		}
-		data = append(data, '\n')
+		if index < len(pipes)-1 {
+			data = append(data, '\n')
+		}
 	}
 	if err := os.WriteFile(fileName, data, 0644); err != nil {
 		panic(err)
