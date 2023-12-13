@@ -1,7 +1,6 @@
 package twentythree
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -9,10 +8,11 @@ func Day13Problem1(inputs []string) string {
 	patterns := Day13ExtractPatterns(inputs)
 
 	var sum int
-	for index, pattern := range patterns {
-		value := pattern.FindPatternValue()
+	for index := range patterns {
+		value := patterns[index].FindPatternValue()
 
-		fmt.Printf("[%d]: %d => %d\n", index, value, sum+value)
+		// fmt.Printf("[%d]: %d => %d\n", index, value, sum+value)
+		// fmt.Printf("%s\n\n", strings.Join(pattern, "\n"))
 
 		sum += value
 	}
@@ -38,12 +38,15 @@ func (p Day13Pattern) FindVerticalMirrorIndex() (mirror int) {
 }
 
 func (p Day13Pattern) IsVerticalValid(index int) bool {
+	// fmt.Printf("Checking Vertical %d\n", index)
+
 	if index == 0 {
 		return false
 	}
 
 	for _, row := range p {
 		for i := 0; i+index < len(row) && index-i-1 >= 0; i++ {
+			// fmt.Printf("p[%d][%d] (%s) == p[%d][%d] (%s)\n", rowIndex, i+index, string(row[i+index]), rowIndex, index-i-1, string(row[index-i-1]))
 			if row[i+index] != row[index-i-1] {
 				return false
 			}
@@ -65,7 +68,7 @@ func (p Day13Pattern) FindHorizontalMirrorIndex() (mirror int) {
 }
 
 func (p Day13Pattern) IsHorizontalValid(index int) bool {
-	// fmt.Printf("Checking %d: %s\n", index, p[index])
+	// fmt.Printf("Checking Horizontal %d: %s\n", index, p[index])
 
 	if index == 0 {
 		return false
@@ -90,5 +93,10 @@ func Day13ExtractPatterns(inputs []string) (patterns []Day13Pattern) {
 			pattern = make(Day13Pattern, 0)
 		}
 	}
+
+	if len(pattern) > 0 {
+		patterns = append(patterns, pattern)
+	}
+
 	return
 }
