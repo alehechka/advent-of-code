@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 )
 
 func main() {
@@ -26,8 +27,10 @@ func main() {
 		return
 	}
 
+	start := time.Now()
 	result := solution(problemInput)
 	fmt.Printf("Result: %s\n", result)
+	fmt.Printf("Duration: %v\n", time.Since(start))
 }
 
 func FindSolution() (solution solutions.Solution, year, day, problem int, err error) {

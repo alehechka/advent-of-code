@@ -26,7 +26,6 @@ func (r Day12Row) FindPossibilities() (count int) {
 
 	for _, fill := range filled {
 		if r.IsFilledValid(fill) {
-			// fmt.Printf("%s => %s, %v\n", r.Springs, fill, r.StatusGroups)
 			count++
 		}
 	}
@@ -51,8 +50,6 @@ func (r Day12Row) IsFilledValid(str string) bool {
 			count = 0
 		}
 	}
-
-	// fmt.Printf("%s => %s | %v == %v\n", r.Springs, str, counts, r.StatusGroups)
 
 	if len(counts) != len(r.StatusGroups) {
 		return false
