@@ -8,13 +8,8 @@ func Day13Problem1(inputs []string) string {
 	patterns := Day13ExtractPatterns(inputs)
 
 	var sum int
-	for index := range patterns {
-		value := patterns[index].FindPatternValue()
-
-		// fmt.Printf("[%d]: %d => %d\n", index, value, sum+value)
-		// fmt.Printf("%s\n\n", strings.Join(pattern, "\n"))
-
-		sum += value
+	for _, pattern := range patterns {
+		sum += pattern.FindPatternValue()
 	}
 
 	return strconv.Itoa(sum)
@@ -23,7 +18,10 @@ func Day13Problem1(inputs []string) string {
 type Day13Pattern []string
 
 func (p Day13Pattern) FindPatternValue() int {
-	return p.FindVerticalMirrorIndex() + p.FindHorizontalMirrorIndex()*100
+	if value := p.FindHorizontalMirrorIndex(); value > 0 {
+		return value * 100
+	}
+	return p.FindVerticalMirrorIndex()
 }
 
 func (p Day13Pattern) FindVerticalMirrorIndex() (mirror int) {
@@ -38,15 +36,12 @@ func (p Day13Pattern) FindVerticalMirrorIndex() (mirror int) {
 }
 
 func (p Day13Pattern) IsVerticalValid(index int) bool {
-	// fmt.Printf("Checking Vertical %d\n", index)
-
 	if index == 0 {
 		return false
 	}
 
 	for _, row := range p {
 		for i := 0; i+index < len(row) && index-i-1 >= 0; i++ {
-			// fmt.Printf("p[%d][%d] (%s) == p[%d][%d] (%s)\n", rowIndex, i+index, string(row[i+index]), rowIndex, index-i-1, string(row[index-i-1]))
 			if row[i+index] != row[index-i-1] {
 				return false
 			}
@@ -68,14 +63,11 @@ func (p Day13Pattern) FindHorizontalMirrorIndex() (mirror int) {
 }
 
 func (p Day13Pattern) IsHorizontalValid(index int) bool {
-	// fmt.Printf("Checking Horizontal %d: %s\n", index, p[index])
-
 	if index == 0 {
 		return false
 	}
 
 	for i := 0; i+index < len(p) && index-i-1 >= 0; i++ {
-		// fmt.Printf("p[%d] (%s) == p[%d] (%s)\n", i+index, p[i+index], index-i-1, p[index-i-1])
 		if p[i+index] != p[index-i-1] {
 			return false
 		}
