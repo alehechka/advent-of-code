@@ -15,7 +15,11 @@ func Day14Problem1(inputs []string) string {
 
 type Day14Platform []string
 
-func (p Day14Platform) LoadNorth() (newPlatform Day14Platform) {
+func (p Day14Platform) LoadNorth() Day14Platform {
+	return p.loadVertical(Day14ShiftLeft)
+}
+
+func (p Day14Platform) loadVertical(loader func(string) string) (newPlatform Day14Platform) {
 	columns := make([]string, 0)
 
 	for x := range p[0] {
@@ -28,7 +32,7 @@ func (p Day14Platform) LoadNorth() (newPlatform Day14Platform) {
 
 	newPlatform = make(Day14Platform, len(p))
 	for _, column := range columns {
-		leftShifted := Day14ShiftLeft(column)
+		leftShifted := loader(column)
 		for index, ch := range leftShifted {
 			newPlatform[index] += string(ch)
 		}
