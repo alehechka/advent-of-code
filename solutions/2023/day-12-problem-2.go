@@ -1,18 +1,28 @@
 package twentythree
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 func Day12Problem2(inputs []string) string {
-	rows := Day12ParseInput(inputs)
+	rows := Day12ParseInputUnfolded(inputs)
 
 	var sum int
+	var wg sync.WaitGroup
 	for _, row := range rows {
-		count := row.FindRecursivePossibilities()
-		sum += count
+		wg.Add(1)
+		go func(r Day12Row) {
+			count := r.FindRecursivePossibilities()
+			fmt.Println(r, count)
+			sum += count
+			wg.Done()
+		}(row)
 	}
+
+	wg.Wait()
 
 	return strconv.Itoa(sum)
 }
@@ -22,11 +32,20 @@ func (r Day12Row) FindRecursivePossibilities() int {
 }
 
 func (r Day12Row) findRecursivePossibilities(str string, prevChar byte, groupIndex int, groupCount int, builder string) (count int) {
-	if len(str) == 0 {
+	// fmt.Println(str, string(prevChar), groupIndex, groupCount, builder)
+
+	if groupIndex >= len(r.StatusGroups) {
+		if len(str) == 0 {
+			// fmt.Printf("%s => %s %v\n", r.Springs, builder, r.StatusGroups)
+			return 1
+		}
+		if len(str) > 0 && (str[0] == '.' || str[0] == '?') {
+			return r.findRecursivePossibilities(str[1:], '.', groupIndex, groupCount, builder+string(str[0]))
+		}
 		return 0
 	}
 
-	if groupIndex >= len(r.StatusGroups) {
+	if len(str) == 0 {
 		return 0
 	}
 
@@ -39,17 +58,24 @@ func (r Day12Row) findRecursivePossibilities(str string, prevChar byte, groupInd
 	hasMoreChars := len(str) > 1
 	isLastGroup := groupIndex == len(r.StatusGroups)-1
 
+	if ch == '.' || ch == '#' {
+		builder += string(ch)
+	}
+
 	if ch == '.' {
 		if hasMoreChars {
 			if prevChar == '#' {
+				if groupCount != expectedGroupCount {
+					return 0
+				}
 				groupIndex++
 			}
 
-			return r.findRecursivePossibilities(str[1:], ch, groupIndex, 0, builder+string(ch))
+			return r.findRecursivePossibilities(str[1:], ch, groupIndex, 0, builder)
 		}
 
 		if isLastGroup && groupCount == expectedGroupCount {
-			// fmt.Printf("%s => %s%s %v\n", r.Springs, builder, string(ch), r.StatusGroups)
+			// fmt.Printf("%s => %s %v\n", r.Springs, builder, r.StatusGroups)
 			return 1
 		}
 
@@ -59,11 +85,11 @@ func (r Day12Row) findRecursivePossibilities(str string, prevChar byte, groupInd
 	if ch == '#' {
 		groupCount++
 		if hasMoreChars {
-			return r.findRecursivePossibilities(str[1:], ch, groupIndex, groupCount, builder+string(ch))
+			return r.findRecursivePossibilities(str[1:], ch, groupIndex, groupCount, builder)
 		}
 
 		if isLastGroup && groupCount == expectedGroupCount {
-			// fmt.Printf("%s => %s%s %v\n", r.Springs, builder, string(ch), r.StatusGroups)
+			// fmt.Printf("%s => %s %v\n", r.Springs, builder, r.StatusGroups)
 			return 1
 		}
 
