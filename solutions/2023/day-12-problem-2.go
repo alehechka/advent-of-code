@@ -65,12 +65,14 @@ func Day12Problem2_BruteForce(inputs []string) string {
 	rows := Day12ParseInputUnfolded(inputs)
 
 	var sum int
+	var index int
 	var wg sync.WaitGroup
 	for _, row := range rows {
 		wg.Add(1)
 		go func(r Day12Row) {
 			count := r.FindRecursivePossibilities()
-			fmt.Println(r, count)
+			index++
+			fmt.Println(index, r, count)
 			sum += count
 			wg.Done()
 		}(row)
