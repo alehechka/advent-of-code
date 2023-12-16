@@ -1,5 +1,7 @@
 package utils
 
+import "fmt"
+
 func Indices(str string, subStr string) []int {
 	indices := make([]int, 0)
 
@@ -10,4 +12,8 @@ func Indices(str string, subStr string) []int {
 	}
 
 	return indices
+}
+
+func CoordKey(x, y int) string {
+	return fmt.Sprintf("%d-%d", x, y)
 }
