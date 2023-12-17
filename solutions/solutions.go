@@ -38,4 +38,5 @@ var Solutions2015 = SolutionArray{
 	{fifteen.Day2Problem1, fifteen.Day2Problem2},
 	{fifteen.Day3Problem1, fifteen.Day3Problem2},
 	{fifteen.Day4Problem1, fifteen.Day4Problem2},
+	{fifteen.Day5Problem1, fifteen.Day5Problem2},
 }
