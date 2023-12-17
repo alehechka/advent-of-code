@@ -31,6 +31,7 @@ var Solutions2023 = SolutionArray{
 	{twentythree.Day14Problem1, twentythree.Day14Problem2},
 	{twentythree.Day15Problem1, twentythree.Day15Problem2},
 	{twentythree.Day16Problem1, twentythree.Day16Problem2},
+	{twentythree.Day17Problem1, twentythree.Day17Problem2},
 }
 
 var Solutions2015 = SolutionArray{
