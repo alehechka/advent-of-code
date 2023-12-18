@@ -1,5 +1,7 @@
 package utils
 
+const MaxInt = int(^uint(0) >> 1)
+
 func GreatestCommonDenominator(a, b int) int {
 	if b == 0 {
 		return a
